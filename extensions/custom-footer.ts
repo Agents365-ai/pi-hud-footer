@@ -4,6 +4,7 @@ import { createHudEditorFactory } from "./hud-footer/editor.ts";
 import { fmtTurnDuration } from "./hud-footer/format.ts";
 import { getI18n, normalizeLanguageSetting } from "./hud-footer/i18n.ts";
 import { createHudFooter, type HudEditorState } from "./hud-footer/render.ts";
+import { createTmuxJobsWatcher, renderTmuxJobsLine } from "./hud-footer/tmux-jobs.ts";
 import { HUD_CURRENCIES, type HudConfig, type HudCurrency, type HudLanguageSetting, type HudStyle } from "./hud-footer/types.ts";
 
 const ACTIVE_EXTENSION_KEY = Symbol.for("pi-hud-footer.active");
@@ -176,17 +177,35 @@ export default function (pi: ExtensionAPI) {
 
 		if (config.style === "border") installEditor(ctx);
 		else uninstallEditor(ctx);
-		ctx.ui.setFooter(
-			createHudFooter(
-				pi,
-				ctx,
-				config,
-				isRunning,
-				getLastTurnDuration,
-				getLastTokenRate,
-				editorState,
-			),
+		const hudFooter = createHudFooter(
+			pi,
+			ctx,
+			config,
+			isRunning,
+			getLastTurnDuration,
+			getLastTokenRate,
+			editorState,
 		);
+		const jobsAboveFooter = config.style === "border";
+		ctx.ui.setFooter((tui, theme, footerData) => {
+			const footer = hudFooter(tui, theme, footerData);
+			const jobs = createTmuxJobsWatcher(() => tui.requestRender());
+			return {
+				dispose() {
+					jobs.dispose();
+					footer.dispose?.();
+				},
+				invalidate() {
+					footer.invalidate?.();
+				},
+				render(width: number): string[] {
+					const lines = footer.render(width);
+					const jobLine = renderTmuxJobsLine(jobs.list(), theme, width);
+					if (!jobLine) return lines;
+					return jobsAboveFooter ? [jobLine, ...lines] : [...lines, jobLine];
+				},
+			};
+		});
 	}
 
 	function styleOptions(i18n = currentI18n()): string[] {
