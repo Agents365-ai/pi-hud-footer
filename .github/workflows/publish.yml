@@ -1,0 +1,50 @@
+name: Publish to npm
+
+# Publishes @agents365-ai/pi-hud-footer with npm Trusted Publishing (OIDC), so no
+# token is stored here. Configure the trusted publisher once for the package on
+# npmjs.com: repository Agents365-ai/pi-hud-footer, workflow publish.yml.
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Verify tag matches package version
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        run: |
+          package_version="$(node -p "require('./package.json').version")"
+          tag_version="${GITHUB_REF_NAME#v}"
+          if [ "$package_version" != "$tag_version" ]; then
+            echo "Tag v$tag_version does not match package.json version $package_version" >&2
+            exit 1
+          fi
+
+      # The tarball contents come from the `files` list in package.json, so a wrong
+      # list fails here instead of shipping.
+      - name: Check the tarball
+        run: npm pack --dry-run
+
+      - name: Publish
+        run: npm publish --access public --provenance

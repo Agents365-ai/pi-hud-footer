@@ -25,6 +25,16 @@ git tag -a v1.1.0 -m "Fork release 1.1.0" && git push origin main && git push or
 Push the tag by name. `git push --tags` would also publish the upstream tags that the `upstream`
 remote fetched into this clone, and those point at upstream's commits.
 
+Releases can also come from CI. `.github/workflows/publish.yml` runs on a `v*.*.*` tag and
+publishes with npm Trusted Publishing (OIDC), which stores no token. Configure the trusted
+publisher once for the package on npmjs.com: repository `Agents365-ai/pi-hud-footer`, workflow
+`publish.yml`. The manual commands above stay as the fallback.
+
+A manual `npm publish` needs either a one-time password from an authenticator or a granular token
+with "Bypass 2FA" enabled. A token without it is refused with
+`403 ... Two-factor authentication or granular access token with bypass 2fa enabled is required`,
+and a read-only token with `403 ... You may not perform that action with these credentials`.
+
 The version line is the fork's own, so an upstream 0.8.0 never collides with a fork release.
 FORK.md carries the divergence; `pi-package` stays in the keywords, which makes the npm package
 eligible for the pi package gallery.
