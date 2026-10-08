@@ -116,10 +116,13 @@ export default function (pi: ExtensionAPI) {
 	// path: one `rtk gain` call costs about 0.33 s.
 	async function refreshExtras(ctx: ExtensionContext, resetBaseline = false) {
 		try {
+			// Read the directory before the first await: a session replacement or reload during the
+			// rtk call makes the captured ctx stale, and touching it then throws.
+			const cwd = ctx.cwd;
 			const totals = await readRtkTotals();
 			const rtk = resetBaseline || !rtkBaseline ? undefined : sessionRtk(rtkBaseline, totals);
 			if (resetBaseline || !rtkBaseline) rtkBaseline = totals;
-			extras = await collectExtras(pi, ctx, rtk);
+			extras = await collectExtras(pi, cwd, rtk);
 			requestFooterRender?.();
 		} catch (error) {
 			console.error("[pi-hud-footer] Failed to collect extras:", error);

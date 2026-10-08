@@ -162,9 +162,9 @@ function entryCount(storeDir: string): number | undefined {
 }
 
 /** Entries in the memory store of the project root, falling back to the working directory. */
-async function memorySegment(ctx: ExtensionContext): Promise<number | undefined> {
-	const root = (await execText("git", ["rev-parse", "--show-toplevel"], ctx.cwd, GIT_TIMEOUT_MS))?.trim();
-	const candidates = [...new Set([root, ctx.cwd].filter((dir): dir is string => Boolean(dir)))];
+async function memorySegment(cwd: string): Promise<number | undefined> {
+	const root = (await execText("git", ["rev-parse", "--show-toplevel"], cwd, GIT_TIMEOUT_MS))?.trim();
+	const candidates = [...new Set([root, cwd].filter((dir): dir is string => Boolean(dir)))];
 	for (const candidate of candidates) {
 		const count = entryCount(join(homedir(), ".pi", "agent", "memory", memorySlug(candidate)));
 		if (count !== undefined) return count;
@@ -172,12 +172,14 @@ async function memorySegment(ctx: ExtensionContext): Promise<number | undefined>
 	return undefined;
 }
 
+// `cwd` is passed in rather than read from a context: a context captured in an event handler is
+// stale after a session replacement or reload, and the caller reads it before its first await.
 export async function collectExtras(
 	pi: ExtensionAPI,
-	ctx: ExtensionContext,
+	cwd: string,
 	rtk: HudExtras["rtk"],
 ): Promise<HudExtras> {
-	const [mcp, memory] = await Promise.all([Promise.resolve(mcpSegment(pi)), memorySegment(ctx)]);
+	const [mcp, memory] = await Promise.all([Promise.resolve(mcpSegment(pi)), memorySegment(cwd)]);
 	const extras: HudExtras = {};
 	if (rtk) extras.rtk = rtk;
 	if (mcp) extras.mcp = mcp;
