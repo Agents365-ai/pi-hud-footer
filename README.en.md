@@ -19,6 +19,7 @@ It keeps model, context, token, cache, cost, tool-call, and running-state inform
 - Shows running / ready state, session elapsed time, and estimated cost; turn duration notifications are opt-in
 - Displays costs in USD or CNY, with a customizable USD-to-CNY rate that defaults to `6.8`
 - Shows tool-call statistics while keeping footer height stable
+- Shows the tmux jobs line: panes on the `pi-agent` socket tagged with `PI_HUD_OWNER`, at most three rows, with the entry count set by `jobsMax`
 - The extras line shows rtk savings of this session, MCP server and tool counts, and the project memory entry count, and hides each segment whose source is absent
 - Supports two HUD styles: `classic` footer style and `border` editor-border style
 - Supports Chinese and English UI text, selected automatically from the system language by default
@@ -55,16 +56,16 @@ The command writes to the configuration file. If the current trusted project alr
 
 ## Installation
 
-Recommended installation from npm:
+Install from GitHub, pinned to a tag:
 
 ```bash
-pi install npm:pi-hud-footer
+pi install git:github.com/Agents365-ai/pi-hud-footer@v1.0.0
 ```
 
-You can also install from GitHub without specifying a version:
+Once the npm release exists, install from npm:
 
 ```bash
-pi install git:github.com/liao666brant/pi-hud-footer
+pi install npm:@agents365-ai/pi-hud-footer@1.0.0
 ```
 
 For local development or debugging, install from a local path:
@@ -72,6 +73,14 @@ For local development or debugging, install from a local path:
 ```bash
 pi install /path/to/pi-hud-footer
 ```
+
+Load the repository directly without installing:
+
+```bash
+pi -e .
+```
+
+The base extension comes from upstream [liao666brant/pi-hud-footer](https://github.com/liao666brant/pi-hud-footer); the fork notice at the top lists this fork's differences.
 
 ## Commands
 
@@ -154,6 +163,8 @@ cacheRead / (input + cacheRead + cacheWrite)
 
 Meaning: cached input tokens / total input-side tokens.
 
+The extras line carries three segments: rtk savings of this session, MCP server and tool counts, and the project memory entry count; each segment hides itself when its source is absent. The tmux jobs line shows panes on the `pi-agent` socket tagged with `PI_HUD_OWNER`, each rendered as `name(command)`, at most three rows, with the entry count set by `jobsMax`, live panes first, and the overflow marked `+N` at the end of the line. See [docs/CONFIG.en.md](docs/CONFIG.en.md) for the collection timing, source files, and edge cases.
+
 ## Development / temporary loading
 
 Load without installing:
@@ -176,11 +187,15 @@ After making changes, run this in pi:
 
 ## Publishing
 
-See [docs/PUBLISH.en.md](docs/PUBLISH.en.md).
+See the "Install and publish" section of [FORK.md](FORK.md).
 
 ## Security
 
-pi extensions run with your system permissions. This extension only reads session metadata exposed by the pi extension API and git branch information exposed by the pi footer API. It does not access the network.
+pi extensions run with your system permissions. This extension makes no network requests, but it reads local files and runs a few commands:
+
+- it reads pane information on the `pi-agent` socket through `tmux -L pi-agent list-panes`, which reads no files;
+- it reads `~/.pi/agent/mcp.json`, `~/.pi/agent/mcp-adapter.json`, `~/.pi/agent/mcp-cache.json`, and the project memory store under `~/.pi/agent/memory/<slug>/`;
+- it runs `rtk gain -f json` and `git rev-parse --show-toplevel`.
 
 ## License
 

@@ -19,6 +19,7 @@
 - 显示 running / ready 状态、会话耗时和费用估算；每轮用时通知可选开启
 - 费用支持 USD / CNY 显示，美元兑人民币汇率默认 `6.8` 且可自定义
 - 显示工具调用统计，并保持 footer 高度稳定
+- 显示 tmux jobs 行：`pi-agent` socket 上带 `PI_HUD_OWNER` 标记的 pane，最多三行，条目数由 `jobsMax` 控制
 - 扩展行显示 rtk 本会话节省、MCP 服务与工具数、项目记忆条数，源不存在时自动隐藏
 - 支持两套 HUD 样式：`classic` 经典 footer 样式和 `border` 输入框边框样式
 - 支持中文/英文界面，默认根据系统语言自动选择
@@ -55,16 +56,16 @@
 
 ## 安装
 
-推荐从 npm 安装：
+从 GitHub 安装，用 tag 固定版本：
 
 ```bash
-pi install npm:pi-hud-footer
+pi install git:github.com/Agents365-ai/pi-hud-footer@v1.0.0
 ```
 
-也可以从 GitHub 安装，不需要指定版本号：
+npm 发布后也可从 npm 安装：
 
 ```bash
-pi install git:github.com/liao666brant/pi-hud-footer
+pi install npm:@agents365-ai/pi-hud-footer@1.0.0
 ```
 
 本地开发或调试时，可以从本地路径安装：
@@ -72,6 +73,14 @@ pi install git:github.com/liao666brant/pi-hud-footer
 ```bash
 pi install /path/to/pi-hud-footer
 ```
+
+不安装、直接加载仓库目录：
+
+```bash
+pi -e .
+```
+
+基础扩展来自上游 [liao666brant/pi-hud-footer](https://github.com/liao666brant/pi-hud-footer)，本 fork 的差异见顶部 Fork 说明。
 
 ## 命令
 
@@ -154,6 +163,8 @@ cacheRead / (input + cacheRead + cacheWrite)
 
 即：缓存命中的输入词元 / 输入侧总词元。
 
+扩展行包含 rtk 本会话节省、MCP 服务与工具数、项目记忆条数三段，每段在数据源缺失时自行隐藏。tmux jobs 行显示 `pi-agent` socket 上带 `PI_HUD_OWNER` 标记的 pane，每项形如 `名称(命令)`，最多三行，条目数由 `jobsMax` 控制，运行中的 pane 优先，放不下的以 `+N` 标在行尾。采集时机、来源文件与边界条件见 [docs/CONFIG.md](docs/CONFIG.md)。
+
 ## 开发 / 临时运行
 
 不安装，临时加载：
@@ -176,11 +187,15 @@ pi -e .
 
 ## 发布给其他人
 
-详见：[docs/PUBLISH.md](docs/PUBLISH.md) / [English](docs/PUBLISH.en.md)
+详见 [FORK.md](FORK.md) 的「Install and publish」一节。
 
 ## 安全说明
 
-pi 扩展会以你的系统权限运行。本扩展只读取 pi 扩展 API 暴露的会话元数据，以及 pi footer API 暴露的 git 分支信息；不访问网络。
+pi 扩展会以你的系统权限运行。本扩展不访问网络，但会读取本机文件并运行少量命令：
+
+- 通过 `tmux -L pi-agent list-panes` 读取 `pi-agent` socket 上的 pane 信息，不读取文件；
+- 读取 `~/.pi/agent/mcp.json`、`~/.pi/agent/mcp-adapter.json`、`~/.pi/agent/mcp-cache.json`，以及 `~/.pi/agent/memory/<slug>/` 下的项目记忆存储；
+- 运行 `rtk gain -f json` 与 `git rev-parse --show-toplevel`。
 
 ## 许可证
 
