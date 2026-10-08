@@ -35,7 +35,10 @@
       "elapsed": true,        // 会话耗时
       "cost": true,           // 费用估算
       "state": true,          // running / ready 状态
-      "turnDuration": false   // 每轮对话用时通知，默认关闭以避免与其他插件重复
+      "turnDuration": false,  // 每轮对话用时通知，默认关闭以避免与其他插件重复
+      "rtkSavings": true,     // 扩展行：rtk 本会话节省
+      "mcpStatus": true,      // 扩展行：MCP 服务与工具数量
+      "memoryCount": true     // 扩展行：项目记忆条数
     },
 
     // classic 样式专用覆盖；这里只写需要覆盖 all 的字段。

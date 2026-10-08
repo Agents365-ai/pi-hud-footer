@@ -11,6 +11,12 @@ type FooterLabels = {
 	tools: string;
 	context: string;
 	tokenBreakdown(input: string, output: string, cacheRead?: string, cacheWrite?: string): string;
+	rtk: string;
+	rtkSaved(amount: string, pct: string): string;
+	mcp: string;
+	mcpStatus(servers: number, tools?: number): string;
+	memory: string;
+	memoryEntries(entries: number): string;
 };
 
 type HudMessages = {
@@ -60,6 +66,12 @@ const TRANSLATIONS: Record<HudLanguage, Omit<HudMessages, "language">> = {
 			cost: "cost",
 			tools: "tools:",
 			context: "ctx",
+			rtk: "rtk",
+			rtkSaved: (amount, pct) => `${amount} saved (${pct})`,
+			mcp: "mcp",
+			mcpStatus: (servers, tools) => `${servers} srv${tools === undefined ? "" : ` · ${tools} tools`}`,
+			memory: "memory",
+			memoryEntries: (entries) => `${entries}`,
 			tokenBreakdown: (input, output, cacheRead, cacheWrite) => {
 				const cache = cacheBreakdown(cacheRead, cacheWrite);
 				return cache ? `(in ${input} / out ${output} / cache ${cache})` : `(in ${input} / out ${output})`;
@@ -104,6 +116,12 @@ const TRANSLATIONS: Record<HudLanguage, Omit<HudMessages, "language">> = {
 			cost: "费用",
 			tools: "工具:",
 			context: "上下文",
+			rtk: "rtk",
+			rtkSaved: (amount, pct) => `节省 ${amount} (${pct})`,
+			mcp: "mcp",
+			mcpStatus: (servers, tools) => `${servers} 服务${tools === undefined ? "" : ` · ${tools} 工具`}`,
+			memory: "记忆",
+			memoryEntries: (entries) => `${entries} 条`,
 			tokenBreakdown: (input, output, cacheRead, cacheWrite) => {
 				const cache = cacheBreakdown(cacheRead, cacheWrite);
 				return cache ? `(输入 ${input} / 输出 ${output} / 缓存 ${cache})` : `(输入 ${input} / 输出 ${output})`;

@@ -1,6 +1,7 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { DEFAULT_CONFIG, isDisplayEnabled, loadConfig, normalizeCurrency, normalizeStyle, saveConfig } from "./hud-footer/config.ts";
 import { createHudEditorFactory } from "./hud-footer/editor.ts";
+import { collectExtras, readRtkTotals, sessionRtk, type HudExtras, type RtkTotals } from "./hud-footer/extras.ts";
 import { fmtTurnDuration } from "./hud-footer/format.ts";
 import { getI18n, normalizeLanguageSetting } from "./hud-footer/i18n.ts";
 import { createHudFooter, type HudEditorState } from "./hud-footer/render.ts";
@@ -31,6 +32,9 @@ export default function (pi: ExtensionAPI) {
 	let lastTurnDuration: number | undefined;
 	let lastTokenRate: number | undefined;
 	let runningTimer: ReturnType<typeof setInterval> | undefined;
+	let extras: HudExtras = {};
+	let rtkBaseline: RtkTotals | undefined;
+	let requestFooterRender: (() => void) | undefined;
 	let config: HudConfig = { ...DEFAULT_CONFIG };
 	let editorInstalled = false;
 	let previousEditorFactory: ReturnType<ExtensionContext["ui"]["getEditorComponent"]> | undefined;
@@ -102,6 +106,24 @@ export default function (pi: ExtensionAPI) {
 
 		lastTokenRate = deltaTokens / (deltaMs / 1000);
 		tokenRateSample = { outputTokens, timestamp: now, source };
+	}
+
+	function getExtras(): HudExtras {
+		return extras;
+	}
+
+	// Extras come from other tools (rtk, MCP, project memory) and are read outside the render
+	// path: one `rtk gain` call costs about 0.33 s.
+	async function refreshExtras(ctx: ExtensionContext, resetBaseline = false) {
+		try {
+			const totals = await readRtkTotals();
+			const rtk = resetBaseline || !rtkBaseline ? undefined : sessionRtk(rtkBaseline, totals);
+			if (resetBaseline || !rtkBaseline) rtkBaseline = totals;
+			extras = await collectExtras(pi, ctx, rtk);
+			requestFooterRender?.();
+		} catch (error) {
+			console.error("[pi-hud-footer] Failed to collect extras:", error);
+		}
 	}
 
 	function updateRunningMessage(ctx: ExtensionContext) {
@@ -184,14 +206,17 @@ export default function (pi: ExtensionAPI) {
 			isRunning,
 			getLastTurnDuration,
 			getLastTokenRate,
+			getExtras,
 			editorState,
 		);
 		const jobsAboveFooter = config.style === "border";
 		ctx.ui.setFooter((tui, theme, footerData) => {
 			const footer = hudFooter(tui, theme, footerData);
 			const jobs = createTmuxJobsWatcher(() => tui.requestRender());
+			requestFooterRender = () => tui.requestRender();
 			return {
 				dispose() {
+					requestFooterRender = undefined;
 					jobs.dispose();
 					footer.dispose?.();
 				},
@@ -285,6 +310,7 @@ export default function (pi: ExtensionAPI) {
 	pi.on("session_start", (_event, ctx) => {
 		resetTokenRate();
 		applyHud(ctx);
+		void refreshExtras(ctx, true);
 	});
 
 	pi.on("agent_start", (_event, ctx) => {
@@ -328,6 +354,7 @@ export default function (pi: ExtensionAPI) {
 			const turnDuration = fmtTurnDuration(elapsed, i18n.language);
 			ctx.ui.notify(i18n.turnDurationNotification(turnDuration), "info");
 		}
+		void refreshExtras(ctx);
 	});
 
 	pi.on("session_shutdown", (_event, ctx) => {
@@ -355,6 +382,7 @@ export default function (pi: ExtensionAPI) {
 		description: commandI18n.commands.reloadDescription,
 		handler: async (_args, ctx) => {
 			applyHud(ctx);
+			void refreshExtras(ctx);
 			ctx.ui.notify(currentI18n().configReloaded, "info");
 		},
 	});

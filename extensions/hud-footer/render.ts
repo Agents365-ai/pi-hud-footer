@@ -2,6 +2,7 @@ import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-a
 import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 import { basename } from "node:path";
 import { isDisplayEnabled } from "./config.ts";
+import { renderExtrasLine, type HudExtras } from "./extras.ts";
 import { fmtCost, fmtDuration, fmtPercent, fmtTokenRate, fmtTokens, fmtTurnDuration, isSubscriptionModel, shortModel } from "./format.ts";
 import { getI18n } from "./i18n.ts";
 import { collectStats, TOOL_ORDER } from "./stats.ts";
@@ -255,11 +256,18 @@ export function renderHudBottomBorderSegments(
 	};
 }
 
-function renderBorderFooterLines(ctx: ExtensionContext, config: HudConfig, theme: Theme, width: number): string[] {
+function renderBorderFooterLines(
+	ctx: ExtensionContext,
+	config: HudConfig,
+	theme: Theme,
+	width: number,
+	getExtras: () => HudExtras,
+): string[] {
 	const i18n = getI18n(config.language);
 	const stats = collectStats(ctx, config.usageScope);
 	const tools = toolLine(stats, theme, width, config, i18n.labels.tools);
-	return tools ? [tools] : [];
+	const extras = renderExtrasLine(getExtras(), config, theme, width);
+	return [extras ? joinParts([" ", extras]) : undefined, tools].filter(Boolean) as string[];
 }
 
 function renderClassicFooterLines(
@@ -269,6 +277,7 @@ function renderClassicFooterLines(
 	isRunning: () => boolean,
 	getLastTurnDuration: () => number | undefined,
 	getLastTokenRate: () => number | undefined,
+	getExtras: () => HudExtras,
 	theme: Theme,
 	width: number,
 	getGitBranch: () => string | null | undefined,
@@ -321,7 +330,8 @@ function renderClassicFooterLines(
 
 	const line1Body = joinWithSeparator([joinParts([topLeft, contextSegment]) || undefined, git, state], theme.fg("dim", " | "));
 	const line2Body = joinWithSeparator([tokenSummary, tokenRate, cacheRate, elapsedText, costText], theme.fg("dim", " | "));
-	const lines = [line1Body, line2Body]
+	const extrasLine = renderExtrasLine(getExtras(), config, theme, width);
+	const lines = [line1Body, line2Body, extrasLine]
 		.filter(Boolean)
 		.map((line) => truncateToWidth(joinParts([" ", line]), width));
 	const tools = toolLine(stats, theme, width, config, i18n.labels.tools);
@@ -336,6 +346,7 @@ export function createHudFooter(
 	isRunning: () => boolean,
 	getLastTurnDuration: () => number | undefined,
 	getLastTokenRate: () => number | undefined,
+	getExtras: () => HudExtras,
 	editorState?: HudEditorState,
 ): FooterFactory {
 	return (tui, theme, footerData) => {
@@ -354,11 +365,12 @@ export function createHudFooter(
 						isRunning,
 						getLastTurnDuration,
 						getLastTokenRate,
+						getExtras,
 						theme,
 						width,
 						() => footerData.getGitBranch(),
 					)
-					: renderBorderFooterLines(ctx, config, theme, width);
+					: renderBorderFooterLines(ctx, config, theme, width, getExtras);
 
 				return lines.map((line) => {
 					if (visibleWidth(line) <= width) return line;

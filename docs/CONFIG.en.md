@@ -129,8 +129,21 @@ Supports the `all`, `classic`, and `border` groups. Precedence: `display.all` < 
 | `cost` | Estimated cost |
 | `state` | running / ready state |
 | `turnDuration` | Per-turn duration notification, disabled by default to avoid conflicts with other extensions |
+| `rtkSavings` | rtk savings of this session, in the extras line |
+| `mcpStatus` | MCP server and tool counts, in the extras line |
+| `memoryCount` | Project memory entry count, in the extras line |
 
 `turnDuration` is disabled by default. Set it to `true` under `display.all` or the relevant style to enable per-turn duration notifications.
+
+## Extras line (rtk / MCP / project memory)
+
+The footer shows one extras line under line 2 in the classic style, and in the footer rows in the border style. The three segments are separated by ` | ` and always appear in this order: rtk, mcp, memory.
+
+- **rtk**: the savings of this session. It is the difference between two reads of the account totals from `rtk gain`, and it looks like `rtk 8.2k saved (39%)`. The rtk history database is shared by every session on the machine, so commands of concurrent sessions also count in that difference.
+- **mcp**: the number of registered MCP servers and their tools, and it looks like `mcp 1 srv · 5 tools`. The servers come from the MCP servers registered with pi, which covers the builtin `mcp.json` and the servers pi-mcp-adapter registers. On a pi version without that API, the extension reads `mcpServers` from `~/.pi/agent/mcp.json` and `~/.pi/agent/mcp-adapter.json` instead. The tool count comes from the pi-mcp-adapter metadata cache `~/.pi/agent/mcp-cache.json`, and only the names found above are counted, so removed servers never appear. A server without a cache record shows the server count alone.
+- **memory**: the number of entries in the project memory store, and it looks like `memory 2`. The project root is the git top level, and the working directory is the fallback. The store directory rule is the one the project-memory extension uses.
+
+Each segment hides itself when its source is absent: no rtk executable, no MCP server, no memory store. When all three are absent, the line itself is not rendered, and the footer keeps the height it has without the feature. The data is read at session start, at the end of each agent run and on `/hud-footer-reload`, never inside a repaint.
 
 Right after a compaction and before the next response arrives, context usage is unknown. As in pi's built-in footer, the HUD then shows `?/<context window>` and hides the progress bar.
 

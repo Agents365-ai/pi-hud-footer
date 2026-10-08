@@ -14,6 +14,7 @@ It keeps model, context, token, cache, cost, tool-call, and running-state inform
 - Shows running / ready state, session elapsed time, and estimated cost; turn duration notifications are opt-in
 - Displays costs in USD or CNY, with a customizable USD-to-CNY rate that defaults to `6.8`
 - Shows tool-call statistics while keeping footer height stable
+- The extras line shows rtk savings of this session, MCP server and tool counts, and the project memory entry count, and hides each segment whose source is absent
 - Supports two HUD styles: `classic` footer style and `border` editor-border style
 - Supports Chinese and English UI text, selected automatically from the system language by default
 - Supports global and project-level JSON configuration
@@ -104,9 +105,11 @@ Example configuration: [examples/hud-footer.json](examples/hud-footer.json) / an
 | `jobsMax` | Maximum number of panes shown in the tmux jobs line. Defaults to `10`; live panes come first. |
 | `usageScope` | Cumulative token and cost scope: active branch (`branch`) or complete session tree (`session`). Defaults to `branch`. |
 
-`display` supports the `all`, `classic`, and `border` groups. Available keys: `toolsLine`, `modelName`, `thinkingLevel`, `projectName`, `gitBranch`, `context`, `tokens`, `tokenBreakdown`, `tokenRate`, `cacheRate`, `elapsed`, `cost`, `state`, `turnDuration`.
+`display` supports the `all`, `classic`, and `border` groups. Available keys: `toolsLine`, `modelName`, `thinkingLevel`, `projectName`, `gitBranch`, `context`, `tokens`, `tokenBreakdown`, `tokenRate`, `cacheRate`, `elapsed`, `cost`, `state`, `turnDuration`, `rtkSavings`, `mcpStatus`, `memoryCount`.
 
 `turnDuration` is disabled by default to avoid duplicate per-turn duration notifications from other extensions. Set it to `true` to enable it.
+
+`rtkSavings`, `mcpStatus`, and `memoryCount` control the three segments of the extras line. All three are visible by default, and each one hides itself when its data source is absent. See the extras line section of [docs/CONFIG.en.md](docs/CONFIG.en.md) for the details.
 
 After changing configuration, run this in pi:
 

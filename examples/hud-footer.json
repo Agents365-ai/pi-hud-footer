@@ -10,7 +10,10 @@
       "toolsLine": false,
       "modelName": true,
       "tokenRate": true,
-      "turnDuration": false
+      "turnDuration": false,
+      "rtkSavings": true,
+      "mcpStatus": true,
+      "memoryCount": true
     },
     "border": {
       "toolsLine": true

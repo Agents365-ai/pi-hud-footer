@@ -14,6 +14,7 @@
 - 显示 running / ready 状态、会话耗时和费用估算；每轮用时通知可选开启
 - 费用支持 USD / CNY 显示，美元兑人民币汇率默认 `6.8` 且可自定义
 - 显示工具调用统计，并保持 footer 高度稳定
+- 扩展行显示 rtk 本会话节省、MCP 服务与工具数、项目记忆条数，源不存在时自动隐藏
 - 支持两套 HUD 样式：`classic` 经典 footer 样式和 `border` 输入框边框样式
 - 支持中文/英文界面，默认根据系统语言自动选择
 - 支持全局和项目级 JSON 配置
@@ -104,9 +105,11 @@ pi install /path/to/pi-hud-footer
 | `jobsMax` | tmux jobs 行最多显示多少个 pane，默认 `10`，运行中的 pane 优先。 |
 | `usageScope` | 累计词元和费用范围：当前分支 `branch` / 完整会话树 `session`，默认 `branch`。 |
 
-`display` 支持 `all`、`classic`、`border` 分组，可配置：`toolsLine`、`modelName`、`thinkingLevel`、`projectName`、`gitBranch`、`context`、`tokens`、`tokenBreakdown`、`tokenRate`、`cacheRate`、`elapsed`、`cost`、`state`、`turnDuration`。
+`display` 支持 `all`、`classic`、`border` 分组，可配置：`toolsLine`、`modelName`、`thinkingLevel`、`projectName`、`gitBranch`、`context`、`tokens`、`tokenBreakdown`、`tokenRate`、`cacheRate`、`elapsed`、`cost`、`state`、`turnDuration`、`rtkSavings`、`mcpStatus`、`memoryCount`。
 
 `turnDuration` 默认关闭，避免与其他插件提供的每轮耗时通知重复；需要时将其设置为 `true`。
+
+`rtkSavings`、`mcpStatus`、`memoryCount` 控制扩展行中的三段，默认开启，各自在数据源不存在时自动隐藏；细节见 [docs/CONFIG.md](docs/CONFIG.md) 的「扩展行」。
 
 修改配置后，在 pi 中执行：
 

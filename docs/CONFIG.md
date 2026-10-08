@@ -129,8 +129,21 @@ TUI 中可用 `/hud-footer-currency` 打开选择器切换并保存 `currency`�
 | `cost` | 费用估算 |
 | `state` | running / ready 状态 |
 | `turnDuration` | 每轮对话用时通知，默认关闭以避免与其他插件重复 |
+| `rtkSavings` | 扩展行中的 rtk 本会话节省 |
+| `mcpStatus` | 扩展行中的 MCP 服务与工具数量 |
+| `memoryCount` | 扩展行中的项目记忆条数 |
 
 `turnDuration` 默认关闭。如需启用每轮用时通知，请在 `display.all` 或对应样式中设置为 `true`。
+
+## 扩展行（rtk / MCP / 项目记忆）
+
+classic 样式的第 2 行下方、border 样式的 footer 中会出现一行扩展信息，三段用 ` | ` 分隔，段序为 rtk、mcp、记忆：
+
+- **rtk**：本会话开始以来的节省，取 `rtk gain` 的账户总计两次读数之差，形如 `rtk 8.2k saved (39%)`。rtk 的历史库由本机所有会话共用，因此并发会话期间执行的命令也会计入该差值。
+- **mcp**：已注册的 MCP 服务数与工具数，形如 `mcp 1 srv · 5 tools`。服务来自 pi 已注册的 MCP 服务（涵盖内置 `mcp.json` 与 pi-mcp-adapter 注册的服务）；无该 API 时回退读 `~/.pi/agent/mcp.json` 与 `~/.pi/agent/mcp-adapter.json` 的 `mcpServers`。工具数取 pi-mcp-adapter 元数据缓存 `~/.pi/agent/mcp-cache.json`，只统计上面出现的服务名，因此已删除的服务不会计入。某服务没有缓存记录时只显示服务数。
+- **记忆**：项目记忆存储中的条目数，形如 `memory 2`。项目根目录优先取 git 顶层目录，其次取当前工作目录；存储目录规则与 project-memory 扩展一致。
+
+三段各自独立：源不存在时该段自行隐藏（没有 rtk 可执行文件、没有 MCP 服务、没有记忆存储），三段都不可见时整行不渲染，footer 高度与未启用时相同。数据在会话开始、每轮 agent 结束和 `/hud-footer-reload` 时采集，不占用渲染路径。
 
 上下文进度在压缩刚结束、下一次响应到达之前无法确定，此时按 pi 官方 footer 的做法显示 `?/<上下文窗口>`，并隐藏进度条。
 
