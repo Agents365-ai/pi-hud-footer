@@ -4,6 +4,11 @@
 
 一个给 [pi coding agent](https://github.com/earendil-works/pi) 使用的 Claude HUD 风格自定义 footer/statusline 插件。
 
+> **Fork 说明**:本仓库是 [Agents365-ai](https://github.com/Agents365-ai) 维护的 fork,基于上游 [liao666brant/pi-hud-footer](https://github.com/liao666brant/pi-hud-footer) 0.7.0(MIT)。除上游功能外,额外提供 tmux jobs 行与 rtk / MCP / 项目记忆扩展行,差异与上游同步方式见 [FORK.md](FORK.md)。
+>
+> 安装:`pi install git:github.com/Agents365-ai/pi-hud-footer@v1.0.0`;已在 npm 发布时也可用 `pi install npm:@agents365-ai/pi-hud-footer@1.0.0`。
+> 项目内临时试用:`pi -e .`
+
 它把模型、上下文、词元、缓存、费用、工具调用和运行状态集中显示在 TUI 底部。默认使用 `classic` 经典 footer 样式；也可以切换到 `border` 输入框边框样式，把稳定信息嵌入输入框边框，只把会动态增长的工具统计保留在 footer 中。
 
 ## 功能亮点

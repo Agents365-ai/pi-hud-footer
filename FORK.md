@@ -1,12 +1,30 @@
 # Local fork notes
 
-This repository is a local fork of
+This repository is [Agents365-ai](https://github.com/Agents365-ai)'s fork of
 [liao666brant/pi-hud-footer](https://github.com/liao666brant/pi-hud-footer), vendored at version
-0.7.0 and extended for one machine's tooling. Nothing is pushed upstream.
+0.7.0 and extended for one machine's tooling. It is published as its own package, under its own
+version line: GitHub `Agents365-ai/pi-hud-footer`, npm `@agents365-ai/pi-hud-footer` from version
+1.0.0. Its own changes are MIT, like upstream, and the upstream LICENSE notice is kept. Nothing
+is pushed upstream.
 
 ## Remotes
 
-- `upstream` -> `https://github.com/liao666brant/pi-hud-footer.git` (fetch only).
+- `origin` -> `https://github.com/Agents365-ai/pi-hud-footer.git` (this fork, read and write)
+- `upstream` -> `https://github.com/liao666brant/pi-hud-footer.git` (fetch only)
+
+## Install and publish
+
+```bash
+pi install git:github.com/Agents365-ai/pi-hud-footer@v1.0.0   # from git, a tag or a commit pins it
+npm login                                                     # once, npm user or org Agents365-ai
+npm publish --access public                                   # publishes @agents365-ai/pi-hud-footer
+pi install npm:@agents365-ai/pi-hud-footer@1.0.0              # after the npm release exists
+git tag v1.1.0 && git push origin main --tags                 # tag a new fork version
+```
+
+The version line is the fork's own, so an upstream 0.8.0 never collides with a fork release.
+FORK.md carries the divergence; `pi-package` stays in the keywords, which makes the npm package
+eligible for the pi package gallery.
 
 ## Lineage
 

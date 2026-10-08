@@ -1,7 +1,7 @@
 {
-  "name": "pi-hud-footer",
-  "version": "0.7.0",
-  "description": "Claude HUD style custom footer for pi coding agent.",
+  "name": "@agents365-ai/pi-hud-footer",
+  "version": "1.0.0",
+  "description": "Claude HUD style custom footer for pi coding agent. Fork of liao666brant/pi-hud-footer with a tmux jobs line and an rtk / MCP / memory extras line.",
   "keywords": [
     "pi-package",
     "pi-extension",
@@ -13,18 +13,19 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/liao666brant/pi-hud-footer.git"
+    "url": "git+https://github.com/Agents365-ai/pi-hud-footer.git"
   },
   "bugs": {
-    "url": "https://github.com/liao666brant/pi-hud-footer/issues"
+    "url": "https://github.com/Agents365-ai/pi-hud-footer/issues"
   },
-  "homepage": "https://github.com/liao666brant/pi-hud-footer#readme",
+  "homepage": "https://github.com/Agents365-ai/pi-hud-footer#readme",
   "files": [
     "extensions",
     "docs",
     "examples",
     "README.md",
     "README.en.md",
+    "FORK.md",
     "LICENSE"
   ],
   "pi": {

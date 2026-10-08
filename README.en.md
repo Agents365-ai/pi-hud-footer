@@ -4,6 +4,11 @@ English | [简体中文](README.md)
 
 A Claude HUD style custom footer/statusline extension for [pi coding agent](https://github.com/earendil-works/pi).
 
+> **Fork notice**: this repository is [Agents365-ai](https://github.com/Agents365-ai)'s fork of upstream [liao666brant/pi-hud-footer](https://github.com/liao666brant/pi-hud-footer) 0.7.0 (MIT). On top of the upstream features it adds a tmux jobs line and an rtk / MCP / project memory extras line. [FORK.md](FORK.md) lists the differences and the way to follow upstream.
+>
+> Install: `pi install git:github.com/Agents365-ai/pi-hud-footer@v1.0.0`, or `pi install npm:@agents365-ai/pi-hud-footer@1.0.0` once the npm release exists.
+> Try it in one project: `pi -e .`
+
 It keeps model, context, token, cache, cost, tool-call, and running-state information visible near the bottom of the TUI. The default is the `classic` footer style. You can also switch to the `border` editor-border style, which embeds stable HUD information into the input editor borders and leaves only dynamically growing tool statistics in the footer.
 
 ## Highlights
