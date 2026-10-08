@@ -197,6 +197,23 @@ pi extensions run with your system permissions. This extension makes no network 
 - it reads `~/.pi/agent/mcp.json`, `~/.pi/agent/mcp-adapter.json`, `~/.pi/agent/mcp-cache.json`, and the project memory store under `~/.pi/agent/memory/<slug>/`;
 - it runs `rtk gain -f json` and `git rev-parse --show-toplevel`.
 
+## Support
+
+If this extension is helpful, consider supporting the author:
+
+<table>
+  <tr>
+    <td align="center"><img src="https://raw.githubusercontent.com/Agents365-ai/images_payment/main/qrcode/wechat-pay.png" width="150" alt="WeChat Pay"><br><b>WeChat Pay</b></td>
+    <td align="center"><img src="https://raw.githubusercontent.com/Agents365-ai/images_payment/main/qrcode/alipay.png" width="150" alt="Alipay"><br><b>Alipay</b></td>
+    <td align="center"><img src="https://raw.githubusercontent.com/Agents365-ai/images_payment/main/qrcode/buymeacoffee.png" width="150" alt="Buy Me a Coffee"><br><b>Buy Me a Coffee</b></td>
+    <td align="center"><img src="https://raw.githubusercontent.com/Agents365-ai/images_payment/main/awarding/award.gif" width="150" alt="Give a Reward"><br><b>Give a Reward</b></td>
+  </tr>
+</table>
+
+## Author
+
+**Agents365-ai** · [Bilibili](https://space.bilibili.com/441831884) · [GitHub](https://github.com/Agents365-ai)
+
 ## License
 
 MIT

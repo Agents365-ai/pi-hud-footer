@@ -197,6 +197,23 @@ pi 扩展会以你的系统权限运行。本扩展不访问网络，但会读�
 - 读取 `~/.pi/agent/mcp.json`、`~/.pi/agent/mcp-adapter.json`、`~/.pi/agent/mcp-cache.json`，以及 `~/.pi/agent/memory/<slug>/` 下的项目记忆存储；
 - 运行 `rtk gain -f json` 与 `git rev-parse --show-toplevel`。
 
+## 支持
+
+如果这个扩展对你有帮助，欢迎打赏支持作者：
+
+<table>
+  <tr>
+    <td align="center"><img src="https://raw.githubusercontent.com/Agents365-ai/images_payment/main/qrcode/wechat-pay.png" width="150" alt="微信支付"><br><b>微信支付</b></td>
+    <td align="center"><img src="https://raw.githubusercontent.com/Agents365-ai/images_payment/main/qrcode/alipay.png" width="150" alt="支付宝"><br><b>支付宝</b></td>
+    <td align="center"><img src="https://raw.githubusercontent.com/Agents365-ai/images_payment/main/qrcode/buymeacoffee.png" width="150" alt="Buy Me a Coffee"><br><b>Buy Me a Coffee</b></td>
+    <td align="center"><img src="https://raw.githubusercontent.com/Agents365-ai/images_payment/main/awarding/award.gif" width="150" alt="打赏"><br><b>打赏</b></td>
+  </tr>
+</table>
+
+## 作者
+
+**Agents365-ai** · [Bilibili](https://space.bilibili.com/441831884) · [GitHub](https://github.com/Agents365-ai)
+
 ## 许可证
 
 MIT
