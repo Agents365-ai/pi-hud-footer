@@ -101,6 +101,7 @@ pi install /path/to/pi-hud-footer
 | `exchangeRate` | 美元兑人民币汇率，默认 `6.8`（即 1 USD = 6.8 CNY）。 |
 | `barWidth` | 上下文进度条宽度。 |
 | `maxTools` | 工具统计最多显示数量。 |
+| `jobsMax` | tmux jobs 行最多显示多少个 pane，默认 `10`，运行中的 pane 优先。 |
 | `usageScope` | 累计词元和费用范围：当前分支 `branch` / 完整会话树 `session`，默认 `branch`。 |
 
 `display` 支持 `all`、`classic`、`border` 分组，可配置：`toolsLine`、`modelName`、`thinkingLevel`、`projectName`、`gitBranch`、`context`、`tokens`、`tokenBreakdown`、`tokenRate`、`cacheRate`、`elapsed`、`cost`、`state`、`turnDuration`。

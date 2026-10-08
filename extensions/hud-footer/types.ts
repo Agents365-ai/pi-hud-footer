@@ -41,6 +41,7 @@ export interface HudConfig {
 	exchangeRate: number;
 	barWidth: number;
 	maxTools: number;
+	jobsMax: number;
 	usageScope: HudUsageScope;
 }
 

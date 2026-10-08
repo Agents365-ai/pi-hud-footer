@@ -57,6 +57,7 @@
   },
   "barWidth": 18,
   "maxTools": 7,
+  "jobsMax": 10,
   "usageScope": "branch"
 }
 ```
@@ -74,6 +75,7 @@
 | `exchangeRate` | number | `6.8` | 美元兑人民币汇率，即 1 USD 可兑换多少 CNY。必须为大于 `0` 的有限数，仅在 `currency` 为 `"CNY"` 时用于换算。 |
 | `barWidth` | number | `18` | 上下文进度条宽度，会限制在 `6..40`。 |
 | `maxTools` | number | `7` | 工具统计最多显示多少个工具，会限制在 `1..20`。 |
+| `jobsMax` | number | `10` | tmux jobs 行最多显示多少个 pane，会限制在 `1..20`。运行中的 pane 全部保留，剩余名额给最近结束的 pane，最旧的已结束 pane 先被隐藏，隐藏数量以 `+N` 标在行尾。 |
 | `usageScope` | string | `"branch"` | 累计 API 用量与费用的统计范围。`"branch"` 仅统计当前活动分支，`"session"` 统计完整会话树；不区分大小写。 |
 
 ## 累计用量与费用

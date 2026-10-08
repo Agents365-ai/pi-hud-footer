@@ -18,5 +18,6 @@
   },
   "barWidth": 18,
   "maxTools": 7,
+  "jobsMax": 10,
   "usageScope": "branch"
 }

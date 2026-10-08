@@ -57,6 +57,7 @@ For an annotated full example, see [examples/hud-footer.jsonc](../examples/hud-f
   },
   "barWidth": 18,
   "maxTools": 7,
+  "jobsMax": 10,
   "usageScope": "branch"
 }
 ```
@@ -74,6 +75,7 @@ For an annotated full example, see [examples/hud-footer.jsonc](../examples/hud-f
 | `exchangeRate` | number | `6.8` | USD-to-CNY exchange rate (the amount of CNY per 1 USD). Must be a finite number greater than `0`; used only when `currency` is `"CNY"`. |
 | `barWidth` | number | `18` | Width of the context progress bar. Clamped to `6..40`. |
 | `maxTools` | number | `7` | Maximum number of tools shown in the tool statistics summary. Clamped to `1..20`. |
+| `jobsMax` | number | `10` | Maximum number of panes shown in the tmux jobs line. Clamped to `1..20`. Every live pane stays, the remaining slots go to the most recently finished panes, and the oldest finished panes are hidden first. The hidden count is marked as `+N` at the end of the line. |
 | `usageScope` | string | `"branch"` | Scope for cumulative API usage and cost. `"branch"` includes only the active branch; `"session"` includes the complete session tree. Case-insensitive. |
 
 ## Cumulative usage and cost

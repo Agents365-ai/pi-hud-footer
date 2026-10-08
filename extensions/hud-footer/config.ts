@@ -52,6 +52,7 @@ export const DEFAULT_CONFIG: HudConfig = {
 	exchangeRate: 6.8,
 	barWidth: 18,
 	maxTools: 7,
+	jobsMax: 10,
 	usageScope: "branch",
 };
 
@@ -132,6 +133,7 @@ function mergeConfig(base: HudConfig, patch: unknown): HudConfig {
 		exchangeRate: positiveNumber(patch.exchangeRate, base.exchangeRate),
 		barWidth: clampInt(patch.barWidth, base.barWidth, 6, 40),
 		maxTools: clampInt(patch.maxTools, base.maxTools, 1, 20),
+		jobsMax: clampInt(patch.jobsMax, base.jobsMax, 1, 20),
 		usageScope: normalizeUsageScope(patch.usageScope) ?? base.usageScope,
 	};
 }
