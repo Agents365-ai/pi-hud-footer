@@ -1,0 +1,5 @@
+# The fork keeps node_modules symlinked to the installed pi packages instead of running
+# `pnpm install`: package.json pins 0.86.0 devDependencies, while the pi that runs is newer.
+# Without this setting `pnpm run` finds the dependencies out of date, installs them, replaces
+# those symlinks, and then fails on ignored build scripts, so no script runs at all.
+verifyDepsBeforeRun: false
