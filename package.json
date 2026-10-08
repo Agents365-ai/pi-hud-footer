@@ -1,6 +1,6 @@
 {
   "name": "@agents365-ai/pi-hud-footer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Claude HUD style custom footer for pi coding agent. Fork of liao666brant/pi-hud-footer with a tmux jobs line and an rtk / MCP / memory extras line.",
   "keywords": [
     "pi-package",

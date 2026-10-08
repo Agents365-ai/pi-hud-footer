@@ -19,8 +19,11 @@ pi install git:github.com/Agents365-ai/pi-hud-footer@v1.0.0   # from git, a tag 
 npm login                                                     # once, npm user or org Agents365-ai
 npm publish --access public                                   # publishes @agents365-ai/pi-hud-footer
 pi install npm:@agents365-ai/pi-hud-footer@1.0.0              # after the npm release exists
-git tag v1.1.0 && git push origin main --tags                 # tag a new fork version
+git tag -a v1.1.0 -m "Fork release 1.1.0" && git push origin main && git push origin v1.1.0
 ```
+
+Push the tag by name. `git push --tags` would also publish the upstream tags that the `upstream`
+remote fetched into this clone, and those point at upstream's commits.
 
 The version line is the fork's own, so an upstream 0.8.0 never collides with a fork release.
 FORK.md carries the divergence; `pi-package` stays in the keywords, which makes the npm package
